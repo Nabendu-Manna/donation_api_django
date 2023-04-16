@@ -5,10 +5,21 @@ from rest_framework.response import Response
 from accounts.models import User
 from geopy.geocoders import Nominatim
 from rest_framework import status, viewsets
+from donation_post.models import DonationPost
 
 from donation_post.serializers import DonationPostRequestSerializer, DonationPostSerializer
 
 class DonationPostView(APIView):
+    
+    def get(self, request, *args, **kwargs):
+        try:
+            donationPost = DonationPost.objects.all()
+        except:
+            return Response({}, status = status.HTTP_400_BAD_REQUEST)
+        
+        serializer = DonationPostSerializer(donationPost, many=True)
+        return Response(serializer.data, status = status.HTTP_200_OK)
+
     def post(self, request, *args, **kwargs):
         requestSerializer = DonationPostRequestSerializer(data = request.data)
         print(requestSerializer.is_valid())
