@@ -8,6 +8,7 @@ from admin_panel.serializers import (
     HomePageLayoutRequestSerializer,
     HomePageLayoutSerializer,
 )
+import os
 
 
 class HomePageLayoutView(APIView):
@@ -19,8 +20,8 @@ class HomePageLayoutView(APIView):
         serializer = HomePageLayoutSerializer(donationPost, many=True)
         return Response(serializer.data, status=status.HTTP_200_OK)
 
-    def post(self, request, *args, **kwargs):
-        homePageLayout = HomePageLayout.get(id=1)
+    def patch(self, request, *args, **kwargs):
+        homePageLayout = HomePageLayout.objects.first()
         if not homePageLayout:
             requestSerializer = HomePageLayoutRequestSerializer(data=request.data)
             if not requestSerializer.is_valid():
@@ -36,12 +37,17 @@ class HomePageLayoutView(APIView):
             serializer = HomePageLayoutSerializer(data=payload)
         else:
             serializer = HomePageLayoutSerializer(
-                instance=homePageLayout, data=payload, partial=True
+                instance=homePageLayout, data=request.data, partial=True
             )
         if serializer.is_valid():
-            donationPost = serializer.save()
+            homePageLayout = serializer.save()
+            if(request.data["image"]):
+                if(homePageLayout.image and os.path.exists(homePageLayout.image.path)):
+                    os.remove(homePageLayout.image.path)
+                homePageLayout.image = request.data["image"]
+                homePageLayout = serializer.save()
             return Response(
-                {"post_id": donationPost.id, "massage": "Successfully Created."},
+                {"post_id": homePageLayout.id, "massage": "Successfully Updated."},
                 status=status.HTTP_201_CREATED,
             )
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)

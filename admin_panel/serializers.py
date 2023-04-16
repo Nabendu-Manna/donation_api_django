@@ -13,6 +13,5 @@ class HomePageLayoutSerializer(serializers.ModelSerializer):
 
 class HomePageLayoutRequestSerializer(serializers.Serializer):
     title = serializers.CharField(required=True)
-    body_text = serializers.FloatField(required=True)
+    body_text = serializers.CharField(required=True)
     image = serializers.ImageField(required=True)
-    created_at = serializers.DateField(required=True)
