@@ -7,10 +7,10 @@ from geopy.geocoders import Nominatim
 from rest_framework import status, viewsets
 from donation_post.models import DonationPost
 
+from rest_framework.permissions import IsAuthenticated
 from donation_post.serializers import DonationPostRequestSerializer, DonationPostSerializer
 
 class DonationPostView(APIView):
-    
     def get(self, request, *args, **kwargs):
         try:
             donationPost = DonationPost.objects.all()
@@ -20,16 +20,17 @@ class DonationPostView(APIView):
         serializer = DonationPostSerializer(donationPost, many=True)
         return Response(serializer.data, status = status.HTTP_200_OK)
 
+class DonationPostCreateView(APIView):
+    permission_classes = [IsAuthenticated]
     def post(self, request, *args, **kwargs):
         requestSerializer = DonationPostRequestSerializer(data = request.data)
-        print(requestSerializer.is_valid())
         if not requestSerializer.is_valid():
             return Response(requestSerializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
-        user = get_object_or_404(User, id=request.data["user_id"])
+        # user = get_object_or_404(User, id=request.data["user_id"])
 
         loc = Nominatim(user_agent="GetLoc")
-        getLoc = loc.geocode(request.data["state"] + ", " + request.data["country"],)
+        getLoc = loc.geocode(request.data["state"] + ", " + request.data["country"] + ", " + request.data["country"],)
 
         payload = {
             "donation_for": request.data["donation_for"],
@@ -39,7 +40,7 @@ class DonationPostView(APIView):
             "latitude": str(getLoc.latitude),
             "longitude": str(getLoc.longitude),
             "end_date": request.data["end_date"],
-            "user": request.data["user_id"]
+            "user": request.user.id
         }
         serializer = DonationPostSerializer(data = payload)
         if serializer.is_valid():

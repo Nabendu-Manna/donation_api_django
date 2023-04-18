@@ -21,4 +21,4 @@ class DonationPostRequestSerializer(serializers.Serializer):
     country = serializers.CharField(required=True)
     state = serializers.CharField(required=True)
     end_date = serializers.DateField(required=True)
-    user_id = serializers.IntegerField(required=True)
+    # user_id = serializers.IntegerField(required=True)

@@ -3,5 +3,6 @@ from . import views
 from rest_framework import routers
 
 urlpatterns = [
-    path('post/', views.DonationPostView.as_view())
+    path('post/', views.DonationPostView.as_view()),
+    path('post/new', views.DonationPostCreateView.as_view())
 ]
