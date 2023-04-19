@@ -12,7 +12,7 @@ class DonationPostSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = DonationPost
-        fields = ('id', 'donation_for', 'amount', 'country', 'state', 'latitude', 'longitude', 'end_date', 'created_at', 'user', 'user_details')
+        fields = ('id', 'donation_for', 'amount', 'country', 'state', 'latitude', 'longitude', 'end_date', 'created_at', 'user', 'user_details', 'id_complete')
 
 
 class DonationPostRequestSerializer(serializers.Serializer):
@@ -22,3 +22,17 @@ class DonationPostRequestSerializer(serializers.Serializer):
     state = serializers.CharField(required=True)
     end_date = serializers.DateField(required=True)
     # user_id = serializers.IntegerField(required=True)
+
+
+class DonationPostSerializer(serializers.ModelSerializer):
+    donor_details = UserSerializer(
+        read_only=True,
+    )
+
+    donation_details = DonationPostSerializer(
+        read_only=True,
+    )
+
+    class Meta:
+        model = DonationPost
+        fields = ('id', 'amount', 'created_at', 'id_complete', 'donation_post', 'donation_details', 'donor', 'donor_details')
