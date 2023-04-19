@@ -3,6 +3,7 @@ from rest_framework.views import APIView
 from rest_framework.generics import ListAPIView
 from rest_framework.response import Response
 from django.db.models import Q
+from datetime import datetime
 
 from accounts.models import User
 from geopy.geocoders import Nominatim
@@ -78,15 +79,22 @@ class DonateView(APIView):
         if not requestSerializer.is_valid():
             return Response(requestSerializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
-        donation = get_object_or_404(DonationLog, id=requestSerializer.data["donation_post"])
+        donation = get_object_or_404(DonationPost, id=requestSerializer.data["donation_post"])
+
+        a = datetime.strptime(str(datetime.now().date()), "%Y-%m-%d")
+        b = datetime.strptime(str(donation.end_date), "%Y-%m-%d")
+        delta = b - a
+
+        if donation.is_complete or delta.days > -1:
+            return Response({"errors": "You can't donate."}, status=status.HTTP_400_BAD_REQUEST)
 
         if request.user.id == donation.user:
             return Response({"errors": "You can't donate."}, status=status.HTTP_400_BAD_REQUEST)
 
         payload = {
-            "donation_post": request.data["donation_post"],
+            "donation_post": requestSerializer.data["donation_post"],
             "amount": requestSerializer.data["amount"],
-            "user": request.user.id
+            "donor": request.user.id
         }
         serializer = DonationLogSerializer(data = payload)
         if serializer.is_valid():

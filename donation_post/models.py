@@ -16,7 +16,7 @@ class DonationPost(models.Model):
     created_at = models.DateTimeField(default=timezone.now)
 
     @property
-    def id_complete(self):
+    def is_complete(self):
         donationList = self.donationlog_set.all()
         total = sum([item.amount for item in donationList])
         return (total >= self.amount)

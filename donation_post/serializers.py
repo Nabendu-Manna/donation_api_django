@@ -2,7 +2,7 @@ from rest_framework import fields, serializers
 
 from accounts.models import User
 from accounts.serializers import UserSerializer
-from .models import DonationPost
+from .models import DonationLog, DonationPost
 
 
 class DonationPostSerializer(serializers.ModelSerializer):
@@ -12,7 +12,7 @@ class DonationPostSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = DonationPost
-        fields = ('id', 'donation_for', 'amount', 'country', 'state', 'latitude', 'longitude', 'end_date', 'created_at', 'user', 'user_details', 'id_complete')
+        fields = ('id', 'donation_for', 'amount', 'country', 'state', 'latitude', 'longitude', 'end_date', 'created_at', 'user', 'user_details', 'is_complete')
 
 
 class DonationPostRequestSerializer(serializers.Serializer):
@@ -34,7 +34,7 @@ class DonationLogSerializer(serializers.ModelSerializer):
     )
 
     class Meta:
-        model = DonationPost
+        model = DonationLog
         fields = ('id', 'amount', 'donation_post', 'donation_details', 'created_at', 'donor', 'donor_details')
 
 
