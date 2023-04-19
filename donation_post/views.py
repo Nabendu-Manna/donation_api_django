@@ -1,6 +1,8 @@
 from django.shortcuts import get_object_or_404, render
 from rest_framework.views import APIView
+from rest_framework.generics import ListAPIView
 from rest_framework.response import Response
+from django.db.models import Q
 
 from accounts.models import User
 from geopy.geocoders import Nominatim
@@ -8,7 +10,25 @@ from rest_framework import status, viewsets
 from donation_post.models import DonationPost
 
 from rest_framework.permissions import IsAuthenticated
+from donation_post.pagination import MyPageNumberPagination
 from donation_post.serializers import DonationPostRequestSerializer, DonationPostSerializer
+
+
+class DonationPostListView(ListAPIView):
+    pagination_class = MyPageNumberPagination
+    serializer_class = DonationPostSerializer
+    def get_queryset(self, *args, **kwargs):
+        search = self.request.query_params.get("search")
+
+        if search is not None:
+            user = User.objects.filter(Q(first_name__contains = search) | Q(last_name__contains = search))
+            if(len(user) > 0):
+                donationPostList = DonationPost.objects.filter(Q(donation_for__contains = search) | Q(user = user[0].id))
+            else:
+                donationPostList = DonationPost.objects.filter(Q(donation_for__contains = search))
+        else:
+            donationPostList = DonationPost.objects.all()
+        return donationPostList
 
 class DonationPostView(APIView):
     def get(self, request, *args, **kwargs):
@@ -19,6 +39,7 @@ class DonationPostView(APIView):
         
         serializer = DonationPostSerializer(donationPost, many=True)
         return Response(serializer.data, status = status.HTTP_200_OK)
+
 
 class DonationPostCreateView(APIView):
     permission_classes = [IsAuthenticated]
