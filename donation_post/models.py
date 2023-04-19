@@ -19,7 +19,7 @@ class DonationPost(models.Model):
     def id_complete(self):
         donationList = self.donationlog_set.all()
         total = sum([item.amount for item in donationList])
-        return total
+        return (total >= self.amount)
 
     @property
     def donation(self):

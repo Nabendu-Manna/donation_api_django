@@ -7,11 +7,11 @@ from django.db.models import Q
 from accounts.models import User
 from geopy.geocoders import Nominatim
 from rest_framework import status, viewsets
-from donation_post.models import DonationPost
+from donation_post.models import DonationLog, DonationPost
 
 from rest_framework.permissions import IsAuthenticated
 from donation_post.pagination import MyPageNumberPagination
-from donation_post.serializers import DonationPostRequestSerializer, DonationPostSerializer
+from donation_post.serializers import DonationLogRequestSerializer, DonationLogSerializer, DonationPostRequestSerializer, DonationPostSerializer
 
 
 class DonationPostListView(ListAPIView):
@@ -74,4 +74,23 @@ class DonationPostCreateView(APIView):
 class DonateView(APIView):
     permission_classes = [IsAuthenticated]
     def post(self, request, *args, **kwargs):
-        pass
+        requestSerializer = DonationLogRequestSerializer(data = request.data)
+        if not requestSerializer.is_valid():
+            return Response(requestSerializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+        donation = get_object_or_404(DonationLog, id=requestSerializer.data["donation_post"])
+
+        if request.user.id == donation.user:
+            return Response({"errors": "You can't donate."}, status=status.HTTP_400_BAD_REQUEST)
+
+        payload = {
+            "donation_post": request.data["donation_post"],
+            "amount": requestSerializer.data["amount"],
+            "user": request.user.id
+        }
+        serializer = DonationLogSerializer(data = payload)
+        if serializer.is_valid():
+            donationPost = serializer.save()
+            return Response({"post_id": donationPost.id, "massage": "Successfully Created."}, status=status.HTTP_201_CREATED)
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
