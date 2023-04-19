@@ -24,7 +24,7 @@ class DonationPostRequestSerializer(serializers.Serializer):
     # user_id = serializers.IntegerField(required=True)
 
 
-class DonationPostSerializer(serializers.ModelSerializer):
+class DonationLogSerializer(serializers.ModelSerializer):
     donor_details = UserSerializer(
         read_only=True,
     )
@@ -35,4 +35,9 @@ class DonationPostSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = DonationPost
-        fields = ('id', 'amount', 'created_at', 'id_complete', 'donation_post', 'donation_details', 'donor', 'donor_details')
+        fields = ('id', 'amount', 'donation_post', 'donation_details', 'created_at', 'donor', 'donor_details')
+
+
+class DonationLogRequestSerializer(serializers.Serializer):
+    donation_post = serializers.IntegerField(required=True)
+    amount = serializers.FloatField(required=True)
