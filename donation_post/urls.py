@@ -1,9 +1,9 @@
-from django.urls import include, path
+from django.urls import path
 from . import views
-from rest_framework import routers
 
 urlpatterns = [
     path('list/', views.DonationPostListView.as_view()),
     path('all/', views.DonationPostView.as_view()),
-    path('new/', views.DonationPostCreateView.as_view())
+    path('new/', views.DonationPostCreateView.as_view()),
+    path('donate/', views.DonateView.as_view())
 ]
