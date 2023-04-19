@@ -85,7 +85,7 @@ class DonateView(APIView):
         b = datetime.strptime(str(donation.end_date), "%Y-%m-%d")
         delta = b - a
 
-        if donation.is_complete or delta.days > -1:
+        if donation.is_complete or delta.days < 0:
             return Response({"errors": "You can't donate."}, status=status.HTTP_400_BAD_REQUEST)
 
         if request.user.id == donation.user:
