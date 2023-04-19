@@ -30,6 +30,7 @@ class DonationPostListView(ListAPIView):
             donationPostList = DonationPost.objects.all()
         return donationPostList
 
+
 class DonationPostView(APIView):
     def get(self, request, *args, **kwargs):
         try:
@@ -68,3 +69,9 @@ class DonationPostCreateView(APIView):
             donationPost = serializer.save()
             return Response({"post_id": donationPost.id, "massage": "Successfully Created."}, status=status.HTTP_201_CREATED)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+
+class DonateView(APIView):
+    permission_classes = [IsAuthenticated]
+    def post(self, request, *args, **kwargs):
+        pass

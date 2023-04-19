@@ -16,10 +16,33 @@ class DonationPost(models.Model):
     created_at = models.DateTimeField(default=timezone.now)
 
     @property
+    def id_complete(self):
+        donationList = self.donationlog_set.all()
+        total = sum([item.amount for item in donationList])
+        return total
+
+    @property
+    def donation(self):
+        return self.donationlog_set.all()
+
+    @property
     def user_details(self):
         return self.user
 
     def __str__(self):
         return str(self.user.first_name + " - " + self.user.last_name)
 
+
+class DonationLog(models.Model):
+    donation_post = models.ForeignKey(DonationPost, verbose_name="Donation Post", on_delete=models.CASCADE)
+    donor = models.ForeignKey(User, verbose_name="Donor", on_delete=models.CASCADE)
+    amount = models.FloatField(default=None, blank=True, null=True)
+    created_at = models.DateTimeField(default=timezone.now)
+
+    @property
+    def donor_details(self):
+        return self.user
+
+    def __str__(self):
+        return str(self.donation_post.donation_for + " - " + self.donor.first_name)
 
