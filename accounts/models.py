@@ -60,10 +60,3 @@ class User(AbstractUser):
     def __str__(self):
         return self.email
 
-class Otp(models.Model):
-    user = models.OneToOneField(User, on_delete=models.CASCADE)
-    otp = models.CharField(max_length=10, blank=True)
-    created_at = models.DateTimeField(default=timezone.now)
-
-    def __str__(self):
-        return self.user.first_name + " - " + self.created_at
