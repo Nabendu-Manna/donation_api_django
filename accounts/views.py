@@ -101,14 +101,14 @@ class ForgotPassword(APIView):
 @api_view(['GET'])
 def isUserValid(request):
     if request.user.is_authenticated:
-        return Response({"login_status": True}, status=status.HTTP_200_OK)
+        return Response({"valid": True}, status=status.HTTP_200_OK)
     else:
-        return Response({"login_status": False}, status=status.HTTP_400_BAD_REQUEST)
+        return Response({"valid": False}, status=status.HTTP_400_BAD_REQUEST)
 
 
 @api_view(['GET'])
 def isAdminValid(request):
     if request.user.is_authenticated and request.user.role == 0:
-        return Response({"login_status": True}, status=status.HTTP_200_OK)
+        return Response({"valid": True}, status=status.HTTP_200_OK)
     else:
-        return Response({"login_status": False}, status=status.HTTP_400_BAD_REQUEST)
+        return Response({"valid": False}, status=status.HTTP_400_BAD_REQUEST)
