@@ -2,6 +2,7 @@ from django.shortcuts import get_object_or_404, render
 from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework import status, viewsets
+from accounts.permissions import IsUserAdmin
 
 from admin_panel.models import HomePageLayout
 from admin_panel.serializers import (
@@ -20,6 +21,9 @@ class HomePageLayoutView(APIView):
         serializer = HomePageLayoutSerializer(donationPost, many=False)
         return Response(serializer.data, status=status.HTTP_200_OK)
 
+
+class HomePageLayoutUpdateView(APIView):
+    permission_classes = [IsUserAdmin]
     def patch(self, request, *args, **kwargs):
         homePageLayout = HomePageLayout.objects.first()
         if not homePageLayout:

@@ -3,6 +3,7 @@ from django.shortcuts import render
 from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework import status
+from rest_framework.decorators import api_view
 from django.contrib.auth import authenticate, login
 from accounts.models import User
 
@@ -77,8 +78,8 @@ class ForgotPassword(APIView):
                 status=status.HTTP_404_NOT_FOUND,
             )
 
-        characters = string.ascii_letters + string.digits + '@#$&%'
-        password = ''.join(random.choice(characters) for i in range(12))
+        characters = string.ascii_letters + string.digits + "@#$&%"
+        password = "".join(random.choice(characters) for i in range(12))
 
         user = User.objects.get(email=request.data["email"])
         user.set_password(password)
@@ -88,8 +89,26 @@ class ForgotPassword(APIView):
             "Subject here",
             "Your new password is " + password,
             "settings.EMAIL_HOST_USER",
-            ['mannanabendu2000@gmail.com', request.data["email"]],
+            ["mannanabendu2000@gmail.com", request.data["email"]],
             fail_silently=False,
         )
 
-        return Response({"message": "New password has been sent to your email."}, status=status.HTTP_200_OK)
+        return Response(
+            {"message": "New password has been sent to your email."},
+            status=status.HTTP_200_OK,
+        )
+
+@api_view(['GET'])
+def isUserValid(request):
+    if request.user.is_authenticated:
+        return Response({"login_status": True}, status=status.HTTP_200_OK)
+    else:
+        return Response({"login_status": False}, status=status.HTTP_400_BAD_REQUEST)
+
+
+@api_view(['GET'])
+def isAdminValid(request):
+    if request.user.is_authenticated and request.user.role == 0:
+        return Response({"login_status": True}, status=status.HTTP_200_OK)
+    else:
+        return Response({"login_status": False}, status=status.HTTP_400_BAD_REQUEST)
