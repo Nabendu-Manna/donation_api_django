@@ -14,10 +14,10 @@ import os
 class HomePageLayoutView(APIView):
     def get(self, request, *args, **kwargs):
         try:
-            donationPost = HomePageLayout.objects.all()
+            donationPost = HomePageLayout.objects.first()
         except:
             return Response({}, status=status.HTTP_400_BAD_REQUEST)
-        serializer = HomePageLayoutSerializer(donationPost, many=True)
+        serializer = HomePageLayoutSerializer(donationPost)
         return Response(serializer.data, status=status.HTTP_200_OK)
 
     def patch(self, request, *args, **kwargs):
