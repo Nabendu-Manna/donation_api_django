@@ -29,6 +29,7 @@ class DonationPostListView(ListAPIView):
                 donationPostList = DonationPost.objects.filter(Q(donation_for__contains = search))
         else:
             donationPostList = DonationPost.objects.all()
+        donationPostList = [item for item in donationPostList if not item.is_complete]
         return donationPostList
 
 
