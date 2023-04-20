@@ -103,7 +103,7 @@ def isUserValid(request):
     if request.user.is_authenticated:
         return Response({"valid": True}, status=status.HTTP_200_OK)
     else:
-        return Response({"valid": False}, status=status.HTTP_400_BAD_REQUEST)
+        return Response({"valid": False}, status=status.HTTP_200_OK)
 
 
 @api_view(['GET'])
@@ -111,4 +111,4 @@ def isAdminValid(request):
     if request.user.is_authenticated and request.user.role == 0:
         return Response({"valid": True}, status=status.HTTP_200_OK)
     else:
-        return Response({"valid": False}, status=status.HTTP_400_BAD_REQUEST)
+        return Response({"valid": False}, status=status.HTTP_200_OK)
