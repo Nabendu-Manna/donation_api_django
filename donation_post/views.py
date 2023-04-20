@@ -37,6 +37,7 @@ class DonationPostView(APIView):
     def get(self, request, *args, **kwargs):
         try:
             donationPost = DonationPost.objects.all()
+            donationPost = [item for item in donationPost if not item.is_complete]
         except:
             return Response({}, status = status.HTTP_400_BAD_REQUEST)
         
