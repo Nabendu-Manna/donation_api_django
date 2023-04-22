@@ -1,3 +1,4 @@
+import datetime
 from django.shortcuts import get_object_or_404, render
 from rest_framework.views import APIView
 from rest_framework.response import Response
@@ -16,6 +17,12 @@ class HomePageLayoutView(APIView):
     def get(self, request, *args, **kwargs):
         try:
             donationPost = HomePageLayout.objects.first()
+            donationPost, crated = HomePageLayout.objects.get_or_create(
+                title = "Teat",
+                body_text = "Test",
+                image = "/images/setting/bg.jpg",
+                created_at = datetime.datetime.now()
+            )
         except:
             return Response({}, status=status.HTTP_400_BAD_REQUEST)
         serializer = HomePageLayoutSerializer(donationPost, many=False)
