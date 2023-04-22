@@ -17,12 +17,13 @@ class HomePageLayoutView(APIView):
     def get(self, request, *args, **kwargs):
         try:
             donationPost = HomePageLayout.objects.first()
-            donationPost, crated = HomePageLayout.objects.get_or_create(
-                title = "Teat",
-                body_text = "Test",
-                image = "/images/setting/bg.jpg",
-                created_at = datetime.datetime.now()
-            )
+            if donationPost is None:
+                donationPost, crated = HomePageLayout.objects.get_or_create(
+                    title = "Make a Difference Today. Donate in itowe.com",
+                    body_text = "Welcome to our donation page! We are grateful for your interest in supporting our cause and making a positive impact in the world. We relies on the generosity of donors like you to fund our mission. Every dollar you donate goes directly towards supporting our programs and helping those in need. Whether you choose to give a one-time donation or become a monthly supporter, your contribution will make a difference in the lives of those we serve. Thank you for your support and for joining us in our efforts to make the world a better place. Together, we can make a difference!",
+                    image = "/images/setting/bg.jpg",
+                    created_at = datetime.datetime.now()
+                )
         except:
             return Response({}, status=status.HTTP_400_BAD_REQUEST)
         serializer = HomePageLayoutSerializer(donationPost, many=False)
