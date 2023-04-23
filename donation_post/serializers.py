@@ -9,7 +9,7 @@ class DonationPostSerializer(serializers.ModelSerializer):
     user_details = UserSerializer(
         read_only=True,
     )
-    received_amount = serializers.DecimalField(max_digits=50, decimal_places=2, read_only=True)
+    received_amount = serializers.IntegerField(read_only=True)
 
     class Meta:
         model = DonationPost
