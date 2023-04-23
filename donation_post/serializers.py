@@ -9,10 +9,11 @@ class DonationPostSerializer(serializers.ModelSerializer):
     user_details = UserSerializer(
         read_only=True,
     )
+    received_amount = serializers.DecimalField(max_digits=50, decimal_places=2, read_only=True)
 
     class Meta:
         model = DonationPost
-        fields = ('id', 'donation_for', 'amount', 'country', 'state', 'latitude', 'longitude', 'end_date', 'created_at', 'user', 'user_details', 'is_complete')
+        fields = ('id', 'donation_for', 'amount', 'country', 'state', 'latitude', 'longitude', 'end_date', 'received_amount', 'created_at', 'user', 'user_details', 'is_complete')
 
 
 class DonationPostRequestSerializer(serializers.Serializer):

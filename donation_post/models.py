@@ -24,6 +24,10 @@ class DonationPost(models.Model):
     @property
     def donation(self):
         return self.donationlog_set.all()
+    
+    @property
+    def received_amount(self):
+        return sum([item.amount for item in self.donationlog_set.all()])
 
     @property
     def user_details(self):
