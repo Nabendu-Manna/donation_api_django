@@ -54,8 +54,8 @@ class HomePageLayoutUpdateView(APIView):
         if serializer.is_valid():
             homePageLayout = serializer.save()
             if(request.data["image"]):
-                if(homePageLayout.image and os.path.exists(homePageLayout.image.path)):
-                    os.remove(homePageLayout.image.path)
+                # if(homePageLayout.image and os.path.exists(homePageLayout.image.path)):
+                #     os.remove(homePageLayout.image.path)
                 homePageLayout.image = request.data["image"]
                 homePageLayout = serializer.save()
             return Response(

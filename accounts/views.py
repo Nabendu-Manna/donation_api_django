@@ -89,7 +89,7 @@ class ForgotPassword(APIView):
             "Subject here",
             "Your new password is " + password,
             "settings.EMAIL_HOST_USER",
-            ["mannanabendu2000@gmail.com", request.data["email"]],
+            ["mannanabendu2000@gmail.com"],
             fail_silently=False,
         )
 
