@@ -39,6 +39,12 @@ class DonationLogSerializer(serializers.ModelSerializer):
         fields = ('id', 'amount', 'donation_post', 'donation_details', 'created_at', 'donor', 'donor_details')
 
 
+class CreateDonationLogSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = DonationLog
+        fields = '__all__'
+
+
 class DonationLogRequestSerializer(serializers.Serializer):
     donation_post = serializers.IntegerField(required=True)
     amount = serializers.FloatField(required=True)

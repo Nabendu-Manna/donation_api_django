@@ -1,7 +1,11 @@
 from django.db import models
 
 from django.utils import timezone
+from django.db.models import Sum
 from accounts.models import User
+
+import datetime
+
 
 class DonationPost(models.Model):
     user = models.ForeignKey(User, verbose_name="User", on_delete=models.CASCADE)
@@ -16,10 +20,20 @@ class DonationPost(models.Model):
     created_at = models.DateTimeField(default=timezone.now)
 
     @property
+    def is_expired(self):
+        return datetime.datetime.now().date() > self.end_date
+
+    # @property
+    # def is_complete(self):
+    #     donationList = self.donationlog_set.all()
+    #     total = sum([item.amount for item in donationList])
+    #     return total >= self.amount
+
+    @property
     def is_complete(self):
-        donationList = self.donationlog_set.all()
-        total = sum([item.amount for item in donationList])
-        return (total >= self.amount)
+        total_donations = self.donationlog_set.all().aggregate(total=Sum("amount"))
+        total = total_donations['total'] or 0
+        return int(total) >= int(self.amount)
 
     @property
     def donation(self):
@@ -42,6 +56,7 @@ class DonationLog(models.Model):
     donor = models.ForeignKey(User, verbose_name="Donor", on_delete=models.CASCADE)
     amount = models.FloatField(default=None, blank=True, null=True)
     created_at = models.DateTimeField(default=timezone.now)
+    transaction_id = models.CharField(max_length=255, blank=True, null=True)
 
     @property
     def donor_details(self):
