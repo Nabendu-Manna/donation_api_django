@@ -71,7 +71,7 @@ ROOT_URLCONF = 'donation_api.urls'
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        'DIRS': [],
+        'DIRS': [os.path.join(BASE_DIR, 'templates')],
         'APP_DIRS': True,
         'OPTIONS': {
             'context_processors': [
@@ -151,3 +151,9 @@ EMAIL_HOST_USER = 'info.nab.404@gmail.com'
 EMAIL_HOST_PASSWORD = 'kfbxtsynzzikgcpz'
 EMAIL_USE_TLS = True
 EMAIL_BACKEND = "django.core.mail.backends.smtp.EmailBackend"
+
+# stripe credentials
+STRIPE_SECRET_KEY = 'sk_test_51PNcPXP4hBIs0fhDrSazSOd448auJt7gwtqgXpJVGigfC3IjVIPE5ksRuPhDcbdPgRD2WfQuwU8kLd6WG4V8ttoC00POWKOKZR'
+STRIPE_PUBLISH_KEY = 'pk_test_51PNcPXP4hBIs0fhDfk7eHfIpNFjG7iKLb7xZbRS3CsKfKB7sPc2qxtgLsjDKTLQzPTSK44XzgiT7BZmFXDd485CT00q5tyKtdP'
+
+
