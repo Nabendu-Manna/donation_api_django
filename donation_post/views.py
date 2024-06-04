@@ -55,7 +55,9 @@ class DonationPostCreateView(APIView):
         # user = get_object_or_404(User, id=request.data["user_id"])
 
         loc = Nominatim(user_agent="GetLoc")
-        getLoc = loc.geocode(request.data["state"] + ", " + request.data["country"] + ", " + request.data["country"],)
+        address = request.data["address"] + ", " + request.data["state"] + ", " + request.data["country"]
+        getLoc = loc.geocode(address)
+        print(getLoc, address)
 
         payload = {
             "donation_for": request.data["donation_for"],
